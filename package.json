@@ -1,0 +1,27 @@
+{
+  "name": "api-chat-devtter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.2.1",
+    "globals": "^17.5.0",
+    "mysql2": "^3.22.2"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "cors": "2.8.6",
+    "express": "5.2.1",
+    "morgan": "1.10.1",
+    "socket.io": "4.8.3",
+    "zod": "4.3.6"
+  }
+}
