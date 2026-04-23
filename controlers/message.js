@@ -1,4 +1,5 @@
 import { validateMessage } from "../schemas/message.js";
+
 export class MessageController {
   constructor({ messageModel }) {
     this.messageModel = messageModel;
