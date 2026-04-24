@@ -20,7 +20,7 @@ export class MessageModel {
         "INSERT INTO messages (sender, content, code, reciever) VALUES (UUID_TO_BIN(?), ?, ?, UUID_TO_BIN(?))",
         [sender, content, JSON.stringify(code), reciever],
       );
-      return result.insertId;
+      return result;
     } catch (error) {
       console.error("Error creating message:", error);
       throw error;

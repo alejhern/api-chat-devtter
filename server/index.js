@@ -77,16 +77,13 @@ io.on("connection", (socket) => {
 
   socket.on("message", async (data, serverOffset) => {
     try {
-      // 🔴 validar sender
-      if (user !== data.sender) {
-        console.warn(
-          `User ID mismatch: socket auth userId (${user}) does not match message sender (${data.sender})`,
-        );
-        return;
-      }
+      data.sender = user;
+      const reciever = socket.handshake.auth.reciever;
+      data.reciever = reciever;
 
       // ✅ guardar mensaje
       await messageController.createMessage(data);
+      data.created_at = new Date(); // Agregar fecha de creación al mensaje
 
       // 🔥 emitir SOLO a ese chat
       const room = getRoomId(data.sender, data.reciever);
