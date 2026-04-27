@@ -15,12 +15,12 @@ const langs = [
 
 const messageSchema = z.object({
   sender: z.string(),
-  reciever: z.string(),
+  receiver: z.string(),
   content: z.string(),
   code: z
     .object({
       language: z.enum(langs),
-      code: z.string(),
+      content: z.string(),
     })
     .optional(),
 });

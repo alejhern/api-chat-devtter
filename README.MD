@@ -46,14 +46,13 @@ GET /chats/:userId1/:userId2
 
 ```js
 socket.emit("message", {
-  sender,
-  reciever,
-  content,
-  code?: {
-    language,
-    code
+  content: "<message>",
+  // optional code snippet
+  code: {
+    language: "<language>",
+    code: "<code snippet>"
   }
-});
+}, receiver);
 ```
 
 ### Receive message
@@ -67,10 +66,7 @@ socket.on("message", (data) => {
 ### Join chat room
 
 ```js
-socket.emit("join_chat", {
-  user1,
-  user2
-});
+socket.emit("join_chat", receiver);
 ```
 
 ---

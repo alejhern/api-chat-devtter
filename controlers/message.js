@@ -5,20 +5,21 @@ export class MessageController {
     this.messageModel = messageModel;
   }
 
-  createMessage = async ({ sender, content, code, reciever }) => {
+  createMessage = async ({ sender, content, code, receiver }) => {
     const validatedMessage = validateMessage({
       sender,
       content,
       code,
-      reciever,
+      receiver,
     });
     const message = await this.messageModel.create(validatedMessage);
 
     return message;
   };
 
-  getConversationsByUserId = async (userId) => {
-    const conversations = await this.messageModel.findByUserId(userId);
+  findConversationsByUserId = async (userId) => {
+    const conversations =
+      await this.messageModel.findConversationsByUserId(userId);
     return conversations;
   };
 
