@@ -4,8 +4,9 @@ import express from "express";
 import { createServer } from "http";
 import logger from "morgan";
 import { Server } from "socket.io";
-import { MessageController } from "../controlers/message.js";
+import MessageController from "../controllers/message_socket.js";
 import { MessageModel } from "../models/message.js";
+import { createChatsRoute } from "../routes/chats.js";
 
 const messageController = new MessageController({
   messageModel: MessageModel,
@@ -29,45 +30,7 @@ app.use(cors());
 
 /* -------------------- ROUTES -------------------- */
 
-// ⚠️ IMPORTANTE: ruta más específica primero
-app.get("/chats/:userId1/:userId2", async (req, res) => {
-  const { userId1, userId2 } = req.params;
-  try {
-    const messages = await messageController.getChatHistory(userId1, userId2);
-    res.json(messages);
-  } catch (error) {
-    console.error("Error fetching chat history:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-app.get("/chats/:userId", async (req, res) => {
-  const { userId } = req.params;
-  try {
-    const conversations =
-      await messageController.findConversationsByUserId(userId);
-    res.json(conversations);
-  } catch (error) {
-    console.error("Error fetching conversations:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-app.post("/messages", async (req, res) => {
-  const { sender, content, code, receiver } = req.body;
-  try {
-    const message = await messageController.createMessage({
-      sender,
-      content,
-      code,
-      receiver,
-    });
-    res.status(201).json(message);
-  } catch (error) {
-    console.error("Error creating message:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
+app.use("/chats", createChatsRoute({ messageModel: MessageModel }));
 
 /* -------------------- SOCKET -------------------- */
 

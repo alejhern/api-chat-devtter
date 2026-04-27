@@ -1,6 +1,6 @@
 import { validateMessage } from "../schemas/message.js";
 
-export class MessageController {
+export default class MessageControllerSocket {
   constructor({ messageModel }) {
     this.messageModel = messageModel;
   }
@@ -12,6 +12,9 @@ export class MessageController {
       code,
       receiver,
     });
+    if (!validatedMessage.success) {
+      console.error("Invalid message data:", validatedMessage.error);
+    }
     const message = await this.messageModel.create(validatedMessage);
 
     return message;
