@@ -12,9 +12,9 @@ export default class MessageControllerSocket {
       code,
       receiver,
     });
-    if (!validatedMessage.success) {
-      console.error("Invalid message data:", validatedMessage.error);
-    }
+    // if (!validatedMessage.success) {
+    //   console.error("Invalid message data:", validatedMessage.error);
+    // }
     const message = await this.messageModel.create(validatedMessage);
 
     return message;
