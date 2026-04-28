@@ -55,10 +55,7 @@ export class MessageModel {
         [userId1, userId2, userId1, userId2],
       );
 
-      return rows.map((row) => ({
-        ...row,
-        code: safeParse(row.code),
-      }));
+      return rows;
     } catch (error) {
       console.error("Error fetching chat history:", error);
       throw error;
@@ -83,10 +80,7 @@ export class MessageModel {
         [userId, userId],
       );
 
-      return rows.map((row) => ({
-        ...row,
-        code: safeParse(row.code),
-      }));
+      return rows;
     } catch (error) {
       console.error("Error fetching conversations:", error);
       throw error;
@@ -106,22 +100,10 @@ export class MessageModel {
         [userId, userId],
       );
 
-      return rows.map((row) => ({
-        ...row,
-        code: safeParse(row.code),
-      }));
+      return rows;
     } catch (error) {
       console.error("Error fetching messages:", error);
       throw error;
     }
-  }
-}
-
-// 🛡️ PARSE JSON SEGURO
-function safeParse(value) {
-  try {
-    return value ? JSON.parse(value) : null;
-  } catch {
-    return null;
   }
 }

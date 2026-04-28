@@ -1,29 +1,38 @@
 {
   "name": "api-chat-devtter",
   "version": "1.0.0",
-  "description": "",
+  "description": "Chat API backend for Devtter",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "chat",
+    "api",
+    "socket.io",
+    "firebase",
+    "backend"
+  ],
+  "author": "Alejandro Hernández",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2",
+    "firebase-admin": "^13.8.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.22.2",
+    "socket.io": "^4.8.3",
+    "zod": "^4.3.6"
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.2.1",
     "globals": "^17.5.0",
-    "mysql2": "^3.22.2"
-  },
-  "dependencies": {
-    "colors": "^1.4.0",
-    "cors": "2.8.6",
-    "dotenv": "^17.4.2",
-    "express": "5.2.1",
-    "morgan": "1.10.1",
-    "socket.io": "4.8.3",
-    "zod": "4.3.6"
+    "nodemon": "^3.1.4"
   }
 }

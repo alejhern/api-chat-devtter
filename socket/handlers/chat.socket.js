@@ -5,7 +5,7 @@ function getRoomId(user1, user2) {
 export function createChatSocket(io, socket, messageController) {
   console.log("A user connected");
 
-  const user = socket.handshake.auth.userId;
+  const user = socket.user;
 
   socket.join(user);
 

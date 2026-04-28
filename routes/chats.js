@@ -7,7 +7,7 @@ export const createChatsRoute = ({ messageModel }) => {
 
   router.get("/:userId/:receiverId", messageController.getChatHistory);
   router.get("/:userId", messageController.findConversationsByUserId);
-  router.post("/", messageController.create);
+  router.post("/:receiver", messageController.create);
 
   return router;
 };
