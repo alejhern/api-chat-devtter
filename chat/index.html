@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Chat</title>
+
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #0f172a;
+        font-family: Arial;
+        color: white;
+      }
+
+      .box {
+        background: #020617;
+        padding: 30px;
+        border-radius: 12px;
+        width: 320px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      input {
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #1e293b;
+        background: #0f172a;
+        color: white;
+        outline: none;
+      }
+
+      button {
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        background: #3b82f6;
+        color: white;
+        cursor: pointer;
+      }
+
+      button:hover {
+        opacity: 0.9;
+      }
+
+      small {
+        color: #94a3b8;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="box">
+      <h2>Start Chat</h2>
+
+      <small>Sender ID</small>
+      <input id="sender" placeholder="e.g. 12" max="10" />
+
+      <small>Receiver ID</small>
+      <input id="receiver" placeholder="e.g. 182317" max="10" />
+
+      <button onclick="startChat()">Enter Chat</button>
+    </div>
+
+    <script>
+      function startChat() {
+        const sender = document.getElementById("sender").value.trim();
+        const receiver = document.getElementById("receiver").value.trim();
+
+        if (!sender || !receiver) return;
+
+        window.location.href = `/chat.html?sender=${encodeURIComponent(
+          sender,
+        )}&receiver=${encodeURIComponent(receiver)}`;
+      }
+    </script>
+  </body>
+</html>

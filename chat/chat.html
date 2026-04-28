@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat UI</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        height: 100vh;
+        background: #0f172a;
+        color: white;
+        overflow: hidden;
+      }
+
+      .chat {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .chat-header {
+        padding: 20px;
+        border-bottom: 1px solid #1e293b;
+        background: #020617;
+      }
+
+      .messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        /* espacio real para el form fijo */
+        padding-bottom: 180px;
+      }
+
+      .message {
+        max-width: 70%;
+        padding: 10px 15px;
+        border-radius: 12px;
+        line-height: 1.4;
+        white-space: pre-wrap;
+      }
+
+      .sent {
+        align-self: flex-end;
+        background: #3b82f6;
+      }
+
+      .received {
+        align-self: flex-start;
+        background: #1e293b;
+      }
+
+      .code-block {
+        margin-top: 10px;
+        background: #0b1220;
+        border: 1px solid #1e293b;
+        border-radius: 10px;
+        padding: 12px;
+        overflow-x: auto;
+        font-family: monospace;
+        font-size: 13px;
+        color: #e2e8f0;
+        white-space: pre;
+      }
+
+      .code-lang {
+        font-size: 11px;
+        color: #94a3b8;
+        margin-bottom: 6px;
+        display: block;
+      }
+
+      /* 🔥 FORM FIJO ABAJO BIEN HECHO */
+      .input-area {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100;
+
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        padding: 15px;
+        border-top: 1px solid #1e293b;
+        background: #020617;
+      }
+
+      .input-row {
+        display: flex;
+        gap: 10px;
+      }
+
+      input {
+        flex: 1;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        background: #0f172a;
+        color: white;
+      }
+
+      #code {
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      textarea {
+        resize: none;
+        height: 80px;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #1e293b;
+        background: #0f172a;
+        color: white;
+        font-family: monospace;
+      }
+
+      select {
+        background: #020617;
+        color: #e2e8f0;
+        border: 1px solid #1e293b;
+        padding: 10px;
+        border-radius: 8px;
+        outline: none;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 8px;
+        background: #3b82f6;
+        color: white;
+        cursor: pointer;
+      }
+
+      button.secondary {
+        background: #1e293b;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="chat">
+      <div class="chat-header">Chat</div>
+
+      <div class="messages" id="messages"></div>
+    </div>
+
+    <form id="message-form" class="input-area">
+      <div class="input-row">
+        <input type="text" id="input" placeholder="Type a message..." />
+      </div>
+      <div id="code">
+        <select id="language">
+          <option value="" disabled selected>Select Language</option>
+          <option value="javascript">JavaScript</option>
+          <option value="typescript">TypeScript</option>
+          <option value="html">HTML</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="bash">Bash</option>
+          <option value="c">C</option>
+          <option value="cpp">C++</option>
+          <option value="ruby">Ruby</option>
+          <option value="php">PHP</option>
+        </select>
+
+        <textarea id="code-input" placeholder="Paste your code..."></textarea>
+      </div>
+
+      <div class="buttons">
+        <button type="button" class="secondary" onclick="toggleCode()">
+          Add Code
+        </button>
+        <button type="submit">Send</button>
+      </div>
+    </form>
+    <script>
+      function toggleCode() {
+        const code = document.getElementById("code");
+        const isHidden = code.style.display !== "flex";
+        code.style.display = isHidden ? "flex" : "none";
+      }
+    </script>
+  </body>
+
+  <script type="module">
+    import { io } from "https://cdn.socket.io/4.5.4/socket.io.esm.min.js";
+
+    const url = "http://localhost:3000";
+    const params = new URLSearchParams(window.location.search);
+
+    const user = params.get("sender");
+    const receiver = params.get("receiver");
+
+    const socket = io(url, {
+      auth: {
+        user,
+        serverOffset: 0,
+      },
+    });
+
+    socket.emit("join_chat", receiver);
+
+    const messagesContainer = document.getElementById("messages");
+
+    function renderMessage(data) {
+      const messageEl = document.createElement("div");
+      messageEl.classList.add(
+        "message",
+        data.sender === user ? "sent" : "received",
+      );
+
+      messageEl.textContent = data.content;
+
+      if (data.code) {
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("code-block");
+
+        const lang = document.createElement("span");
+        lang.classList.add("code-lang");
+        lang.textContent = data.code.language || "code";
+
+        const pre = document.createElement("pre");
+        pre.textContent = data.code.content;
+
+        wrapper.appendChild(lang);
+        wrapper.appendChild(pre);
+        messageEl.appendChild(wrapper);
+      }
+
+      messagesContainer.appendChild(messageEl);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    fetch(`${url}/chats/${user}/${receiver}`, {
+      headers: {
+        "x-user-id": user,
+      },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        data.forEach(renderMessage);
+      });
+
+    socket.on("message", (data, serverOffset) => {
+      renderMessage(data);
+      socket.auth.serverOffset = serverOffset;
+    });
+
+    document.getElementById("message-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const input = document.getElementById("input");
+      const codeInput = document.getElementById("code-input");
+      const language = document.getElementById("language");
+
+      const message = input.value.trim();
+      const code = codeInput.value.trim();
+
+      if (!message) return;
+
+      const body = { content: message };
+
+      if (code) {
+        body.code = {
+          content: code,
+          language: language.value,
+        };
+      }
+
+      socket.emit("message", body, receiver);
+
+      input.value = "";
+      codeInput.value = "";
+    });
+  </script>
+</html>
