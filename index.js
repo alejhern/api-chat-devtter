@@ -1,8 +1,11 @@
 import "colors";
 import cors from "cors";
+import dotenv from "dotenv";
 import express from "express";
 import { createServer } from "http";
 import logger from "morgan";
+
+dotenv.config();
 
 import { auth } from "./firebase/index.js";
 import { MessageModel } from "./models/message.js";
