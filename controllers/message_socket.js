@@ -5,17 +5,25 @@ export default class MessageControllerSocket {
     this.messageModel = messageModel;
   }
 
-  createMessage = async ({ sender, content, code, receiver }) => {
-    const validatedMessage = validateMessage({
+  create = async ({ sender, content, code, receiver }) => {
+    const result = validateMessage({
       sender,
       content,
       code,
       receiver,
     });
-    // if (!validatedMessage.success) {
-    //   console.error("Invalid message data:", validatedMessage.error);
-    // }
-    const message = await this.messageModel.create(validatedMessage);
+
+    if (!result.success) {
+      console.error("Invalid message data:", result.error.format());
+      throw new Error("Invalid message data");
+    }
+
+    const create = await this.messageModel.create(result.data);
+
+    const message = {
+      ...result.data,
+      id: create.insertId,
+    };
 
     return message;
   };

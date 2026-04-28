@@ -5,7 +5,7 @@ export default class MessageController {
     this.messageModel = messageModel;
   }
 
-  createMessage = async (req, res) => {
+  create = async (req, res) => {
     const { sender, content, code, receiver } = req.body;
     const validatedMessage = await validateMessage({
       sender,

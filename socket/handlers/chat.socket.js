@@ -30,22 +30,27 @@ export function createChatSocket(io, socket, messageController) {
   });
 
   socket.on("message", async (data, receiver, serverOffset) => {
-    data.sender = user;
-    data.receiver = receiver;
+    const messageData = {
+      ...data,
+      sender: user,
+      receiver,
+    };
 
     try {
-      await messageController.createMessage(data);
+      const result = await messageController.create(messageData);
 
-      const room = getRoomId(data.sender, data.receiver);
+      const room = getRoomId(result.sender, result.receiver);
 
-      io.to(room).emit("message", data, serverOffset);
+      // mensaje en chat
+      io.to(room).emit("message", result, serverOffset);
 
-      io.to(data.sender).emit("new_message_notification", {
-        senderId: data.sender,
+      // notificaciones
+      io.to(result.sender).emit("new_message_notification", {
+        senderId: result.sender,
       });
 
-      io.to(data.receiver).emit("new_message_notification", {
-        senderId: data.sender,
+      io.to(result.receiver).emit("new_message_notification", {
+        senderId: result.sender,
       });
     } catch (error) {
       console.error("Error handling message:", error);

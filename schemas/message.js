@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 const langs = [
   "javascript",
@@ -13,23 +13,22 @@ const langs = [
   "php",
 ];
 
-const messageSchema = z.object({
-  sender: z.string(),
-  receiver: z.string(),
-  content: z.string(),
-  code: z
-    .object({
-      language: z.enum(langs),
-      content: z.string(),
-    })
-    .optional(),
-});
+const messageSchema = z
+  .object({
+    sender: z.string(),
+    receiver: z.string(),
+    content: z.string().min(1).optional(),
+    code: z
+      .object({
+        language: z.enum(langs),
+        content: z.string().min(1),
+      })
+      .optional(),
+  })
+  .refine((data) => data.content || data.code, {
+    message: "Message must have content or code",
+  });
 
 export function validateMessage(data) {
-  try {
-    return messageSchema.parse(data);
-  } catch (error) {
-    console.error("Validation error:", error);
-    throw error;
-  }
+  return messageSchema.safeParse(data);
 }

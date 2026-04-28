@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import mysql from "mysql2/promise";
+import { randomUUID } from "node:crypto";
 
 dotenv.config();
 
@@ -17,15 +18,18 @@ export class MessageModel {
   // 📤 CREATE MESSAGE
   static async create(message) {
     const { sender, receiver, content, code } = message;
+    const id = randomUUID();
 
     try {
       const [result] = await pool.query(
         `
-        INSERT INTO messages (sender, receiver, content, code)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO messages (id, sender, receiver, content, code)
+        VALUES (UUID_TO_BIN (?), ?, ?, ?, ?)
         `,
-        [sender, receiver, content, code ? JSON.stringify(code) : null],
+        [id, sender, receiver, content, code ? JSON.stringify(code) : null],
       );
+
+      result.insertId = id; // Agregar el ID generado al resultado
 
       return result;
     } catch (error) {
