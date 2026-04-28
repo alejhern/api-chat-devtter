@@ -1,9 +1,9 @@
-CREATE DATABASE IF NOT EXISTS devtter;
+CREATE DATABASE IF NOT EXISTS demos;
 
-USE devtter;
+USE demos;
 
 CREATE TABLE
-    IF NOT EXISTS messages (
+    IF NOT EXISTS api_chat (
         id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN (UUID (), true)),
         sender VARCHAR(10) NOT NULL,
         receiver VARCHAR(10) NOT NULL,
@@ -24,3 +24,7 @@ CREATE TABLE
         INDEX idx_conversation (conversation_id),
         INDEX idx_created (created_at)
     );
+
+CREATE USER IF NOT EXISTS 'demo'@'localhost' IDENTIFIED BY 'demo';
+GRANT ALL PRIVILEGES ON demos.* TO 'demo'@'localhost';
+FLUSH PRIVILEGES;
