@@ -1,124 +1,147 @@
-# 💬 Devtter Chat API
+# 💬 Devtter Chat API (Demo)
 
-A real-time chat API built with **Node.js, Express, Socket.IO, and MySQL**, supporting private conversations, code messages, and persistent chat history.
+🚀 **Devtter Chat API** es una aplicación de chat en tiempo real construida con **Node.js**, **Express**, **Socket.IO** y **MySQL**.
+Permite mensajería privada, envío de código y almacenamiento persistente de conversaciones.
 
-## 🚀 Features
+## 🌐 Demo
 
-* ⚡ Real-time messaging using Socket.IO
-* 💾 Persistent message storage with MySQL
-* 🔐 Private one-to-one chats (user rooms)
-* 🧠 Chat history retrieval between users
-* 💻 Support for sending code snippets with messages
-* 📡 REST API + WebSocket hybrid architecture
-* 🔄 Connection recovery support (Socket.IO)
+### 💻 Frontend (modo desarrollo)
 
----
-
-## 🏗️ Tech Stack
-
-* Node.js
-* Express.js
-* Socket.IO
-* MySQL
-* JavaScript (ES Modules)
-
----
-
-## 📡 API Endpoints
-
-### Get conversations of a user
-
+```bash
+npm run ui
 ```
+
+👉 Abre en tu navegador:
+
+```text
+http://localhost:8080
+```
+
+### ⚙️ Backend API
+
+```bash
+npm run start
+```
+
+## ✨ Características
+
+- ⚡ Mensajería en tiempo real con Socket.IO
+- 💬 Chats privados 1 a 1
+- 💾 Persistencia de mensajes en MySQL
+- 🧠 Recuperación de historial de chat
+- 💻 Soporte para snippets de código (lenguaje + bloque)
+- 🔄 Reconexión automática de sockets
+- 🧩 Arquitectura híbrida REST + WebSocket
+
+## 🧱 Stack Tecnológico
+
+- Node.js
+- Express.js
+- Socket.IO
+- MySQL
+- Frontend en Vanilla JS
+
+## 📡 API REST
+
+### Obtener chats de un usuario
+
+```http
 GET /chats/:userId
 ```
 
-### Get chat history between two users
+### Obtener chat entre dos usuarios
 
-```
+```http
 GET /chats/:userId1/:userId2
 ```
 
----
+## ⚡ Eventos Socket.IO
 
-## ⚡ Real-time Events
-
-### Send message
-
-```js
-socket.emit("message", {
-  content: "<message>",
-  // optional code snippet
-  code: {
-    language: "<language>",
-    code: "<code snippet>"
-  }
-}, receiver);
-```
-
-### Receive message
-
-```js
-socket.on("message", (data) => {
-  // handle incoming message
-});
-```
-
-### Join chat room
+### Unirse a un chat
 
 ```js
 socket.emit("join_chat", receiver);
 ```
 
----
+### Enviar mensaje
 
-## 🧠 Architecture
+```js
+socket.emit(
+  "message",
+  {
+    content: "Hola!",
+    code: {
+      language: "javascript",
+      content: "console.log('hello')",
+    },
+  },
+  receiver
+);
+```
 
-* Each chat is isolated using **Socket.IO rooms**
-* Messages are validated before being stored in the database
-* UUIDs are used to identify users and ensure data integrity
-* Chat history is retrieved via REST API, real-time updates via WebSocket
+### Recibir mensaje
 
----
+```js
+socket.on("message", (data) => {
+  console.log("Nuevo mensaje:", data);
+});
+```
 
-## 📦 Installation
+## 🧠 Arquitectura del sistema
+
+- Cada conversación se gestiona mediante rooms de Socket.IO
+- Los mensajes se almacenan en MySQL
+- Identificadores únicos (UUID) para usuarios y mensajes
+- REST API para sincronización inicial
+- WebSockets para comunicación en tiempo real
+
+## 📦 Instalación
 
 ```bash
 git clone https://github.com/alejherm/devtter-chat-api
 cd devtter-chat-api
 npm install
-npm run start
+npm run dev
 ```
 
----
+## 🔧 Scripts disponibles
 
-## 🔧 Environment Variables
+```json
+{
+  "start": "node index.js",
+  "dev": "nodemon index.js",
+  "ui": "npx servor chat"
+}
+```
+
+## 🌍 Variables de entorno
 
 ```env
 PORT=3000
+
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=your_password
 DB_NAME=chat_db
 ```
 
----
+## 🚀 Roadmap
 
-## 📌 Future Improvements
+- 🔐 Autenticación con JWT
+- 🟢 Estado online/offline de usuarios
+- ✍️ Indicador de escritura (typing…)
+- 👁️ Confirmaciones de lectura
+- 👥 Chats grupales
+- 📱 UI totalmente responsive
 
-* Authentication with JWT
-* Online/offline user status
-* Typing indicators
-* Message read receipts
-* Group chats
+## 👨‍💻 Autor
 
----
+Hecho con 💙 por Alejandro Hernández.
 
-## 🧑‍💻 Author
+## ⭐ Contribución
 
-Built by Alejandro Hernández
+Si te gusta este proyecto:
 
----
-
-If you want, I can also:
-🔥 write a *perfect GitHub README with badges + screenshots section*
-🔥 or make it look like a **top open-source project (Discord/WhatsApp style)**
+- ⭐ Dale una estrella en GitHub
+- 🍴 Haz un fork
+- 🐛 Reporta bugs o abre PRs

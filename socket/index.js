@@ -1,6 +1,5 @@
 import { Server } from "socket.io";
 import MessageController from "../controllers/message_socket.js";
-import { auth } from "../firebase/index.js";
 import { createChatSocket } from "./handlers/chat.socket.js";
 
 export function initSocket({ httpServer, messageModel }) {
@@ -17,14 +16,15 @@ export function initSocket({ httpServer, messageModel }) {
 
   io.use(async (socket, next) => {
     try {
-      const token = socket.handshake.auth.token;
-
-      const user = await auth.verifyIdToken(token);
-      socket.user = user.uid; // 👈 UID disponible en sockets
-
+      const user = socket.handshake.auth.user;
+      if (!user) {
+        return next(new Error("Unauthorized"));
+      }
+      socket.user = user;
       next();
-    } catch {
-      next(new Error("Unauthorized"));
+    } catch (error) {
+      console.error("Socket authentication error:", error);
+      next(new Error("Internal server error"));
     }
   });
 

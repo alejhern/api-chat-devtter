@@ -1,14 +1,11 @@
-import dotenv from "dotenv";
 import mysql from "mysql2/promise";
 import { randomUUID } from "node:crypto";
 
-dotenv.config();
-
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: "localhost",
+  user: "demo",
+  password: "demo",
+  database: "demos",
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
@@ -23,7 +20,7 @@ export class MessageModel {
     try {
       const [result] = await pool.query(
         `
-        INSERT INTO messages (id, sender, receiver, content, code)
+        INSERT INTO api_chat (id, sender, receiver, content, code)
         VALUES (UUID_TO_BIN (?), ?, ?, ?, ?)
         `,
         [id, sender, receiver, content, code ? JSON.stringify(code) : null],
@@ -44,7 +41,7 @@ export class MessageModel {
       const [rows] = await pool.query(
         `
         SELECT BIN_TO_UUID(id) as id, sender, receiver, content, code, created_at
-        FROM messages
+        FROM api_chat
         WHERE conversation_id = CONCAT(
           LEAST(?, ?),
           '-',
@@ -68,10 +65,10 @@ export class MessageModel {
       const [rows] = await pool.query(
         `
         SELECT BIN_TO_UUID(id) as id, sender, receiver, content, code, created_at
-        FROM messages
+        FROM api_chat
         WHERE id IN (
           SELECT MAX(id)
-          FROM messages
+          FROM api_chat
           WHERE sender = ? OR receiver = ?
           GROUP BY conversation_id
         )
@@ -93,7 +90,7 @@ export class MessageModel {
       const [rows] = await pool.query(
         `
         SELECT BIN_TO_UUID(id) as id, sender, receiver, content, code, created_at
-        FROM messages
+        FROM api_chat
         WHERE sender = ? OR receiver = ?
         ORDER BY created_at DESC
         `,
