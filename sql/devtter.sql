@@ -2,11 +2,27 @@ CREATE DATABASE IF NOT EXISTS devtter;
 
 USE devtter;
 
+DROP TABLE IF EXISTS messages;
+
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE
-    IF NOT EXISTS messages (
+    users (
+        id VARCHAR(10) PRIMARY KEY,
+        userName VARCHAR(10) NOT NULL UNIQUE,
+        name VARCHAR(50) NOT NULL,
+        email VARCHAR(100) NOT NULL UNIQUE,
+        avatar VARCHAR(255) DEFAULT NULL,
+        is_online BOOLEAN DEFAULT TRUE,
+        last_logout TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_userName (userName)
+    );
+
+CREATE TABLE
+    messages (
         id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN (UUID (), true)),
-        sender VARCHAR(10) NOT NULL,
-        receiver VARCHAR(10) NOT NULL,
+        sender VARCHAR(10) NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+        receiver VARCHAR(10) NOT NULL REFERENCES users (id) ON DELETE CASCADE,
         content TEXT NOT NULL,
         code JSON DEFAULT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

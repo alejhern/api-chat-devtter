@@ -9,7 +9,9 @@ dotenv.config();
 
 import { auth } from "./firebase/index.js";
 import { MessageModel } from "./models/message.js";
+import { UserModel } from "./models/user.js";
 import { createChatsRoute } from "./routes/chats.js";
+import { createUsersRoute } from "./routes/users.js";
 import { initSocket } from "./socket/index.js";
 
 const app = express();
@@ -21,6 +23,12 @@ app.use(cors());
 
 //middleware autenticación firebase
 app.use(async (req, res, next) => {
+  if (req.path.startsWith("/users") && req.method === "GET") {
+    return next();
+  }
+  if (req.path === "/users/batch" && req.method === "POST") {
+    return next();
+  }
   try {
     const token = req.headers.authorization?.split(" ")[1];
 
@@ -35,7 +43,11 @@ app.use(async (req, res, next) => {
   }
 });
 
+app.use("/users", createUsersRoute({ userModel: UserModel }));
 app.use("/chats", createChatsRoute({ messageModel: MessageModel }));
+app.use((req, res) => {
+  res.status(404).json({ error: "Not found" });
+});
 
 initSocket({ httpServer, messageModel: MessageModel });
 

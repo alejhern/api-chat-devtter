@@ -1,7 +1,7 @@
 {
-  "name": "api-chat-devtter",
+  "name": "api-devtter",
   "version": "1.0.0",
-  "description": "Chat API backend for Devtter",
+  "description": "API backend for Devtter",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -10,9 +10,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "chat",
     "api",
     "socket.io",
+    "chat",
     "firebase",
     "backend"
   ],
