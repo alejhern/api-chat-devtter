@@ -43,7 +43,19 @@ export default class MessageController {
     try {
       const conversations =
         await this.messageModel.findConversationsByUserId(userId);
-      res.json(conversations);
+      const conversationsWithLastMessage = conversations.map((conv) => ({
+        receiver: {
+          id: conv.receiver_id,
+          name: conv.name,
+          avatar: conv.avatar,
+        },
+        lastMessage: {
+          content: conv.content,
+          code: conv.code,
+          createdAt: conv.created_at,
+        },
+      }));
+      res.json(conversationsWithLastMessage);
     } catch (error) {
       console.error("Error fetching conversations:", error);
       res.status(500).json({ error: "Internal server error" });

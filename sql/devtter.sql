@@ -2,8 +2,6 @@ CREATE DATABASE IF NOT EXISTS devtter;
 
 USE devtter;
 
-DROP TABLE IF EXISTS messages;
-
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE
@@ -17,6 +15,19 @@ CREATE TABLE
         last_logout TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         INDEX idx_userName (userName)
     );
+
+INSERT INTO
+    `users` (`id`, `userName`, `name`, `email`, `avatar`)
+VALUES
+    (
+        'unknown',
+        'unknown',
+        'Unknown User',
+        '',
+        'https://api.dicebear.com/9.x/bottts/png?seed=Unknown'
+    );
+
+DROP TABLE IF EXISTS messages;
 
 CREATE TABLE
     messages (
@@ -40,3 +51,8 @@ CREATE TABLE
         INDEX idx_conversation (conversation_id),
         INDEX idx_created (created_at)
     );
+
+INSERT INTO
+    `messages` (`sender`, `receiver`, `content`)
+VALUES
+    ('unknown', '182317', 'hola')

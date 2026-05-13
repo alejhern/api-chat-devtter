@@ -31,7 +31,19 @@ export default class MessageControllerSocket {
   findConversationsByUserId = async (userId) => {
     const conversations =
       await this.messageModel.findConversationsByUserId(userId);
-    return conversations;
+    const conversationsWithLastMessage = conversations.map((conv) => ({
+      receiver: {
+        id: conv.receiver_id,
+        name: conv.name,
+        avatar: conv.avatar,
+      },
+      lastMessage: {
+        content: conv.content,
+        code: conv.code,
+        createdAt: conv.created_at,
+      },
+    }));
+    return conversationsWithLastMessage;
   };
 
   getChatHistory = async (userId1, userId2) => {

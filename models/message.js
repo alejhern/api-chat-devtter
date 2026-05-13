@@ -54,17 +54,39 @@ export class MessageModel {
     try {
       const [rows] = await pool.query(
         `
-        SELECT BIN_TO_UUID(id) as id, sender, receiver, content, code, created_at
+      SELECT 
+        m1.id,
+        m1.sender,
+        m1.receiver,
+        m1.content,
+        m1.code,
+        m1.created_at,
+
+        u.id AS receiver_id,
+        u.name,
+        u.avatar
+
+      FROM messages m1
+
+      INNER JOIN (
+        SELECT conversation_id, MAX(created_at) as last_date
         FROM messages
-        WHERE id IN (
-          SELECT MAX(id)
-          FROM messages
-          WHERE sender = ? OR receiver = ?
-          GROUP BY conversation_id
-        )
-        ORDER BY created_at DESC
-        `,
-        [userId, userId],
+        WHERE sender = ? OR receiver = ?
+        GROUP BY conversation_id
+      ) m2
+        ON m1.conversation_id = m2.conversation_id
+        AND m1.created_at = m2.last_date
+
+      INNER JOIN users u
+        ON u.id = CASE 
+          WHEN m1.sender = ? THEN m1.receiver
+          ELSE m1.sender
+        END
+
+      WHERE m1.sender = ? OR m1.receiver = ?
+      ORDER BY m1.created_at DESC
+      `,
+        [userId, userId, userId, userId, userId],
       );
 
       return rows;
