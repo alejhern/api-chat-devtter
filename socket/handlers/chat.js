@@ -3,8 +3,6 @@ function getRoomId(user1, user2) {
 }
 
 export function createChatSocket(io, socket, messageController) {
-  console.log("A user connected");
-
   const user = socket.user;
 
   socket.join(user);
@@ -55,9 +53,5 @@ export function createChatSocket(io, socket, messageController) {
     } catch (error) {
       console.error("Error handling message:", error);
     }
-  });
-
-  socket.on("disconnect", () => {
-    console.log("A user disconnected");
   });
 }
