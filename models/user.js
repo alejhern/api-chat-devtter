@@ -84,6 +84,25 @@ export class UserModel {
     }
   }
 
+  // login
+  static async login(userId) {
+    try {
+      const [result] = await pool.query(
+        `
+        UPDATE users
+        SET last_logout = NULL, is_online = TRUE
+        WHERE id = ?
+        `,
+        [userId],
+      );
+
+      return result;
+    } catch (error) {
+      console.error("Error logging in user:", error);
+      throw error;
+    }
+  }
+
   // logout
   static async logout(userId) {
     try {

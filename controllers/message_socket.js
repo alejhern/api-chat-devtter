@@ -1,6 +1,6 @@
 import { validateMessage } from "../schemas/message.js";
 
-export default class MessageControllerSocket {
+export default class MessageController {
   constructor({ messageModel }) {
     this.messageModel = messageModel;
   }

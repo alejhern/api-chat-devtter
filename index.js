@@ -49,7 +49,7 @@ app.use((req, res) => {
   res.status(404).json({ error: "Not found" });
 });
 
-initSocket({ httpServer, messageModel: MessageModel });
+initSocket({ httpServer, messageModel: MessageModel, userModel: UserModel });
 
 const PORT = process.env.PORT || 3000;
 
